@@ -14,6 +14,6 @@ def test_auth_unauthorized():
             status_code=HTTPStatus.UNAUTHORIZED
         )
         api = InCharge('someuser', 'somepassword')
-        result = api.authenticate()
-        assert result.status_code == HTTPStatus.UNAUTHORIZED
+        response = api.authenticate()
+        assert response.status_code == HTTPStatus.UNAUTHORIZED
         assert api.jwt_token is None
