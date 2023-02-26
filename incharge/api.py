@@ -3,6 +3,7 @@
 from http import HTTPStatus
 
 import requests
+
 from requests import Response
 from requests.auth import HTTPBasicAuth
 
@@ -70,7 +71,7 @@ class InCharge:
             raise ConnectionError from incharge_connection_error
 
     def get_station_consumption(
-        self, station_id: str, since_date: str = "2000-01-01T00%3A00%3A00.00Z"
+        self, station_name: str, since_date: str = "2000-01-01T00%3A00%3A00.00Z"
     ) -> Response:
         """Get consumption data for one charging station."""
         self.authenticate()
@@ -84,7 +85,7 @@ class InCharge:
 
             response = requests.get(
                 timeout=10000,
-                url=f"{API_BASE_URL}{API_GET_STATION_CONSUMPTION_PATH}{station_id}?since={since_date}",
+                url=f"{API_BASE_URL}{API_GET_STATION_CONSUMPTION_PATH}{station_name}?since={since_date}",
                 headers=headers,
             )
             return response
