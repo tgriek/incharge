@@ -13,6 +13,6 @@ jobs:
       - name: Install dependencies
         run: pip install codecov pytest
       - name: Run tests and collect coverage
-        run: pytest --cov app
+        run: coverage run --source=./incharge/ -m pytest
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
