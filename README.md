@@ -1,3 +1,4 @@
+[![codecov](https://codecov.io/gh/tgriek/incharge/branch/main/graph/badge.svg?token=SZPKLIUKS2)](https://codecov.io/gh/tgriek/incharge)
 # Vattenfall InCharge
 Python implemenation of the Vattenfall InCharge API
 
