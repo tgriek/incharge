@@ -22,8 +22,3 @@ This package currently supports
 `api.get_stations()` Get list of stations.
 
 `api.get_station_consumption(station_name, since_date)` Get consumption of a single station based on its name.
-
-## Disclaimer
-
-This package is based on network inspection from https://myincharge.vattenfall.com/ and is entirely used at own risk.
-The developers & maintainers of this library accept no responsibility for any damage, problems or issues that arise with your InCharge account or controlled charging stations.
