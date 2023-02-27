@@ -3,6 +3,7 @@
 from http import HTTPStatus
 
 import requests
+import json
 
 from requests import Response
 from requests.auth import HTTPBasicAuth
@@ -31,68 +32,49 @@ class InCharge:
 
     def authenticate(self) -> Response:
         """Auth and retrieve JWT token."""
-        try:
-            headers = {**API_AUTH_SUB_KEY_HEADER, **API_REFERER_HEADER}
-            response = requests.post(
-                timeout=10000,
-                url=API_BASE_URL + API_AUTH_PATH,
-                headers=headers,
-                auth=HTTPBasicAuth(self.username, self.password),
-            )
-            self.jwt_token = response.headers.get("Authorization")
-            return response
-        except requests.exceptions.HTTPError as incharge_connection_error:
-            if (
-                incharge_connection_error.response.status_code
-                == HTTPStatus.UNAUTHORIZED
-            ):
-                raise  AuthorizationError from incharge_connection_error
-            raise ConnectionError from incharge_connection_error
+        headers = {**API_AUTH_SUB_KEY_HEADER, **API_REFERER_HEADER}
+        response = requests.post(
+            timeout=10000,
+            url=API_BASE_URL + API_AUTH_PATH,
+            headers=headers,
+            auth=HTTPBasicAuth(self.username, self.password),
+        )
+        self.jwt_token = response.headers.get("Authorization")
+        if not self.jwt_token:
+            raise AuthorizationError
+        return response
+    
 
     def get_stations(self) -> Response:
         """Get list of charging stations."""
         self.authenticate()
-        try:
-            headers = {
-                "Authorization": self.jwt_token,
-                **API_ENDPOINT_SUB_KEY_HEADER,
-                **API_REFERER_HEADER,
-            }
-            response = requests.get(
-                timeout=10000, url=API_BASE_URL + API_GET_STATIONS_PATH, headers=headers
-            )
-            return response
-        except requests.exceptions.HTTPError as incharge_connection_error:
-            if (
-                incharge_connection_error.response.status_code
-                == HTTPStatus.UNAUTHORIZED
-            ):
-                raise AuthorizationError from incharge_connection_error
-            raise ConnectionError from incharge_connection_error
+        headers = {
+            "Authorization": self.jwt_token,
+            **API_ENDPOINT_SUB_KEY_HEADER,
+            **API_REFERER_HEADER,
+        }
+        response = requests.get(
+            timeout=10000, url=API_BASE_URL + API_GET_STATIONS_PATH, headers=headers
+        )
+        return response
+
 
     def get_station_consumption(
         self, station_name: str, since_date: str = "2000-01-01T00%3A00%3A00.00Z"
     ) -> Response:
-        """Get consumption data for one charging station."""
+        """Get consumption data for one charging station.""" 
         self.authenticate()
-        try:
-            headers = {
-                "Authorization": self.jwt_token,
-                **API_ENDPOINT_SUB_KEY_HEADER,
-                **API_REFERER_HEADER,
-                **API_ACCEPT_HEADER,
-            }
+        headers = {
+            "Authorization": self.jwt_token,
+            **API_ENDPOINT_SUB_KEY_HEADER,
+            **API_REFERER_HEADER,
+            **API_ACCEPT_HEADER,
+        }
 
-            response = requests.get(
-                timeout=10000,
-                url=f"{API_BASE_URL}{API_GET_STATION_CONSUMPTION_PATH}{station_name}?since={since_date}",
-                headers=headers,
-            )
-            return response
-        except requests.exceptions.HTTPError as incharge_connection_error:
-            if (
-                incharge_connection_error.response.status_code
-                == HTTPStatus.UNAUTHORIZED
-            ):
-                raise AuthorizationError from incharge_connection_error
-            raise ConnectionError from incharge_connection_error
+        response = requests.get(
+            timeout=10000,
+            url=f"{API_BASE_URL}{API_GET_STATION_CONSUMPTION_PATH}{station_name}?since={since_date}",
+            headers=headers,
+        )
+        return response
+    

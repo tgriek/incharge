@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="incharge",
-    version="0.0.5",
+    version="1.0.0",
     author="Tim van Grieken",
     author_email="tgriek@gmail.com",
     description="A package to talk to the VattenFall InCharge API's",

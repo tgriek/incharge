@@ -1,16 +1,4 @@
 import json
-test_response_one_station = json.loads(
-    json.dumps(
-        {
-            "stations": [
-                {
-                    "name": "station1",
-                }
-            ]
-        }
-    )
-)
-
 
 test_response_stations = json.loads(
     json.dumps(
