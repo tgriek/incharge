@@ -33,8 +33,8 @@ def test_auth_unauthorized():
             status_code=HTTPStatus.UNAUTHORIZED
         )
         api = InCharge('someuser', 'somepassword')
-        with pytest.raises(AuthorizationError):
-            api.authenticate()
+        response = api.authenticate()
+        assert response.status_code == HTTPStatus.UNAUTHORIZED
       
 
 
@@ -63,8 +63,8 @@ def test_get_stations_unauthorized():
             status_code=HTTPStatus.UNAUTHORIZED
         )
         api = InCharge('someuser', 'somepassword')
-        with pytest.raises(AuthorizationError):
-            api.get_stations()
+        response = api.get_stations()
+        assert response.status_code == HTTPStatus.UNAUTHORIZED
         
 def test_get_station_consumption():
     with requests_mock.Mocker() as mock_request:
@@ -99,6 +99,6 @@ def test_get_station_consumption_unauthorized():
             status_code=HTTPStatus.UNAUTHORIZED
         )
         api = InCharge('someuser', 'somepassword')
-        with pytest.raises(AuthorizationError):
-            api.get_station_consumption(station_name='station1')
+        response = api.get_station_consumption(station_name='station1')
+        assert response.status_code == HTTPStatus.UNAUTHORIZED
         
