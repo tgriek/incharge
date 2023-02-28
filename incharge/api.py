@@ -3,7 +3,7 @@
 from http import HTTPStatus
 
 import requests
-import json
+import functools
 
 from requests import Response
 from requests.auth import HTTPBasicAuth
@@ -42,10 +42,19 @@ class InCharge:
         self.jwt_token = response.headers.get("Authorization")
         return response
     
-
+    def auth(func):
+        @functools.wraps(func)
+        def wrap(self, *args, **kwargs):
+            auth_response = self.authenticate()
+            if not self.jwt_token:
+                return auth_response
+            else:
+                return func(self, *args, **kwargs)
+        return wrap
+    
+    @auth
     def get_stations(self) -> Response:
         """Get list of charging stations."""
-        self.authenticate()
         headers = {
             "Authorization": self.jwt_token,
             **API_ENDPOINT_SUB_KEY_HEADER,
@@ -56,12 +65,11 @@ class InCharge:
         )
         return response
 
-
+    @auth
     def get_station_consumption(
         self, station_name: str, since_date: str = "2000-01-01T00%3A00%3A00.00Z"
     ) -> Response:
         """Get consumption data for one charging station.""" 
-        self.authenticate()
         headers = {
             "Authorization": self.jwt_token,
             **API_ENDPOINT_SUB_KEY_HEADER,
@@ -75,4 +83,3 @@ class InCharge:
             headers=headers,
         )
         return response
-    
