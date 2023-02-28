@@ -40,8 +40,6 @@ class InCharge:
             auth=HTTPBasicAuth(self.username, self.password),
         )
         self.jwt_token = response.headers.get("Authorization")
-        if not self.jwt_token:
-            raise AuthorizationError
         return response
     
 
